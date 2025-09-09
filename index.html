@@ -18,7 +18,7 @@
 
 <body>
     <div id="root">
-        <div class="containerTv">
+        <!-- <div class="containerTv">
             <div class="loading-overlay ">
                 <div class="loader"></div>
             </div>
@@ -92,14 +92,75 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
+        <h1>
+            Websockets System
+        </h1>
+        <button id="connectBtn">Connect WebSocket</button>
+        <div id="messages"></div>
     </div>
 
+    
     <script>
+        const ENVIRONMENT = {
+            BACKEND_URL: "universiapulse-001-site45.qtempurl.com"
+        };
 
+        let socket = null;
 
-        
+        const userId = 123;            
+        const establishmentId = 456;    
+
+        const messagesDiv = document.getElementById('messages');
+
+        function logMessage(msg) {
+            const p = document.createElement('p');
+            p.textContent = msg;
+            messagesDiv.appendChild(p);
+            console.log(msg);
+        }
+
+        function connectWebSocket() {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            logMessage("WebSocket already connected");
+            return;
+        }
+
+        socket = new WebSocket(`ws://${ENVIRONMENT.BACKEND_URL}`);
+
+        socket.onopen = () => {
+            logMessage("WebSocket connected");
+
+            socket.send(JSON.stringify({
+            action: 'register',
+            payload: { userId, establishmentId }
+            }));
+        };
+
+        socket.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+                logMessage(`Message received: ${JSON.stringify(message)}`);
+
+            if (message.action === 'hello_world') {
+                logMessage(`Hello World from backend: ${JSON.stringify(message.payload)}`);
+            } else if (['establishment_updated', 'bureau_updated', 'Ticket_Modified'].includes(message.action)) {
+                logMessage('Data updated, refresh your UI here');
+            }
+        };
+
+        socket.onerror = (err) => {
+            logMessage(`WebSocket error: ${err}`);
+        };
+
+        socket.onclose = () => {
+            logMessage("WebSocket disconnected");
+            setTimeout(connectWebSocket, 3000);
+        };
+        }
+
+        document.getElementById('connectBtn').addEventListener('click', connectWebSocket);
     </script>
+
 
 </body>
 
