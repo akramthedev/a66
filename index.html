@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TV Old Browser Gallery</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #222;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 { margin-bottom: 12px; }
+
+    .button {
+      display: inline-block;
+      margin: 5px;
+      padding: 8px 12px;
+      background: #007acc;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .button:hover { background: #005a99; }
+
+    .gallery {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .photo {
+      display: inline-block;
+      width: 30%;
+      margin: 1%;
+      vertical-align: top;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .photo img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .photo p {
+      margin: 0;
+      padding: 6px;
+      font-size: 14px;
+    }
+
+    /* Responsive for very old TVs (simplest way) */
+    @media screen and (max-width: 600px) {
+      .photo { width: 48%; margin: 1%; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Old TV Browser Gallery</h1>
+
+<div>
+  <button class="button" onclick="filterGallery('all')">All</button>
+  <button class="button" onclick="filterGallery('nature')">Nature</button>
+  <button class="button" onclick="filterGallery('city')">City</button>
+  <button class="button" onclick="filterGallery('tech')">Tech</button>
+</div>
+
+<div class="gallery" id="gallery"></div>
+
+<script>
+
+    var photos = [
+    { src: 'https://media.istockphoto.com/id/517188688/fr/photo/paysage-de-montagne.jpg?s=612x612&w=0&k=20&c=pB4ewEznPPXu63-wemLp-I9O6zZmKWbsFKpyNBiMXiU=', category: 'nature', caption: 'Beautiful nature' },
+    { src: 'https://thumbs.dreamstime.com/b/horizontal-vert-13598486.jpg', category: 'nature', caption: 'Beautiful nature' },
+    { src: 'https://www.shutterstock.com/image-photo/business-bay-dubai-night-600nw-2476138621.jpg', category: 'city', caption: 'Beautiful city' },
+    { src: 'https://t4.ftcdn.net/jpg/02/83/83/93/360_F_283839302_yt6JIsE96Pj4PydFDcBNKDUnuSpYB9h0.jpg', category: 'city', caption: 'Beautiful city' },
+    { src: 'https://www.shutterstock.com/image-photo/hands-typing-on-laptop-programming-600nw-2480023489.jpg', category: 'tech', caption: 'Beautiful tech' },
+    { src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm5c9icJbbofNgg9hHqBZ1NnLGFkWQXv-2wMLioEY0cYT1aqzfovUJjCDNAguXTAKqqgs&usqp=CAU', category: 'tech', caption: 'Beautiful tech' },
+  ];
+
+  var galleryEl = document.getElementById('gallery');
+
+  function displayGallery(list) {
+    galleryEl.innerHTML = '';
+    for (var i = 0; i < list.length; i++) {
+      var photoDiv = document.createElement('div');
+      photoDiv.className = 'photo';
+      var img = document.createElement('img');
+      img.src = list[i].src;
+      img.alt = list[i].caption;
+      var caption = document.createElement('p');
+      caption.innerHTML = list[i].caption;
+      photoDiv.appendChild(img);
+      photoDiv.appendChild(caption);
+      galleryEl.appendChild(photoDiv);
+    }
+  }
+
+  function filterGallery(category) {
+    if (category === 'all') {
+      displayGallery(photos);
+    } else {
+      var filtered = [];
+      for (var i = 0; i < photos.length; i++) {
+        if (photos[i].category === category) {
+          filtered.push(photos[i]);
+        }
+      }
+      displayGallery(filtered);
+    }
+  }
+
+  // Initial display
+  displayGallery(photos);
+</script>
+
+</body>
+</html>
